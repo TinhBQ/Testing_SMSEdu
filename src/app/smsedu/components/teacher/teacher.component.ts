@@ -139,7 +139,7 @@ export class TeacherComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchText$
-      .pipe(debounceTime(1000), distinctUntilChanged())
+      // .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(packageName =>
         this.getTeachers({ ...this.params, search: packageName })
       );
@@ -209,7 +209,7 @@ export class TeacherComponent implements OnInit {
         this.loading = false;
       },
       error => {
-        this.showMassageService.showErrorMessage(error?.message);
+        // this.showMassageService.showErrorMessage(error?.message);
         this.router.navigate([paths.auth.error]);
       }
     );
@@ -228,7 +228,7 @@ export class TeacherComponent implements OnInit {
   // * --------------------- Call APIs Serve for Edit Teacher --------------------
   onInitDataTeacherDialog(): Observable<any> {
     return Observable.create(observer => {
-      this.splashScreenService.show();
+      // this.splashScreenService.show();
       let isRefresh = false;
       forkJoin([
         this.subjectService.getSubjects(),
@@ -250,17 +250,17 @@ export class TeacherComponent implements OnInit {
                   return this.onInitDataTeacherDialog();
                 }),
                 catchError(() => {
-                  this.splashScreenService.hide();
-                  this.showMassageService.showErrorMessage(
-                    'Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.'
-                  );
+                  // this.splashScreenService.hide();
+                  // this.showMassageService.showErrorMessage(
+                  //   'Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.'
+                  // );
                   this.router.navigate([paths.auth.login]);
                   localStorage.setItem('isRefresh', 'false');
                   return of('...');
                 })
               );
             } else {
-              this.splashScreenService.hide();
+              // this.splashScreenService.hide();
               this.router.navigate([paths.auth.error]);
               return of('...');
             }
@@ -323,8 +323,8 @@ export class TeacherComponent implements OnInit {
         this.teacherDialog = true;
       },
       error => {
-        this.showMassageService.showErrorMessage(error?.message);
-        this.teacherDialog = false;
+        // this.showMassageService.showErrorMessage(error?.message);
+        // this.teacherDialog = false;
       }
     );
   }
@@ -426,24 +426,24 @@ export class TeacherComponent implements OnInit {
       this.teacherService.updateTeacher(this.handleTeachers[0]).subscribe(
         response => {
           this.onRefresh();
-          this.showMassageService.showSuccessMessage(response?.message);
+          // this.showMassageService.showSuccessMessage(response?.message);
         },
         error => {
-          this.showMassageService.showErrorMessage(error?.message);
+          // this.showMassageService.showErrorMessage(error?.message);
         }
       );
     } else {
       this.teacherService.addTeacher(this.handleTeachers).subscribe(
         response => {
           this.onRefresh();
-          this.showMassageService.showSuccessMessage(response?.message);
+          // this.showMassageService.showSuccessMessage(response?.message);
         },
         error => {
-          this.showMassageService.showErrorMessage(error?.message);
+          // this.showMassageService.showErrorMessage(error?.message);
         }
       );
     }
-    this.teacherDialog = false;
+    // this.teacherDialog = false;
   }
 
   // * --------------------- Hide Teacher Dialog --------------------
@@ -477,42 +477,52 @@ export class TeacherComponent implements OnInit {
   }
 
   // * --------------------- Confirm Delete Teacher Form --------------------
+  // onConfirmDelete(teacher: ITeacher): void {
+  //   this.confirmationService.confirm({
+  //     key: 'confirm1',
+  //     message: `Bạn chắc chắn muốn xóa Giáo viên <b>${teacher.name}</b>?`,
+  //     accept: () => {
+  //       this.teacherService.deleteTeacher([teacher.id]).subscribe(
+  //         response => {
+  //           this.onRefresh();
+  //           // this.showMassageService.showSuccessMessage(response?.message);
+  //         },
+  //         error => {
+  //           // this.showMassageService.showErrorMessage(error?.message);
+  //         }
+  //       );
+  //     },
+  //   });
+  // }
+
   onConfirmDelete(teacher: ITeacher): void {
-    this.confirmationService.confirm({
-      key: 'confirm1',
-      message: `Bạn chắc chắn muốn xóa Giáo viên <b>${teacher.name}</b>?`,
-      accept: () => {
-        this.teacherService.deleteTeacher([teacher.id]).subscribe(
-          response => {
-            this.onRefresh();
-            this.showMassageService.showSuccessMessage(response?.message);
-          },
-          error => {
-            this.showMassageService.showErrorMessage(error?.message);
-          }
-        );
-      },
-    });
+    this.teacherService.deleteTeacher([teacher.id]).subscribe();
   }
 
+  // onConfirmSelectedDelete(): void {
+  //   this.confirmationService.confirm({
+  //     key: 'confirm1',
+  //     message: `Bạn chắc chắn muốn xóa danh sách Giáo viên?`,
+  //     accept: () => {
+  //       this.teacherService
+  //         .deleteTeacher(this.selectedTeachers.map(teacher => teacher.id))
+  //         .subscribe(
+  //           response => {
+  //             this.onRefresh();
+  //             // this.showMassageService.showSuccessMessage(response?.message);
+  //           },
+  //           error => {
+  //             // this.showMassageService.showErrorMessage(error?.message);
+  //           }
+  //         );
+  //     },
+  //   });
+  // }
+
   onConfirmSelectedDelete(): void {
-    this.confirmationService.confirm({
-      key: 'confirm1',
-      message: `Bạn chắc chắn muốn xóa danh sách Giáo viên?`,
-      accept: () => {
-        this.teacherService
-          .deleteTeacher(this.selectedTeachers.map(teacher => teacher.id))
-          .subscribe(
-            response => {
-              this.onRefresh();
-              this.showMassageService.showSuccessMessage(response?.message);
-            },
-            error => {
-              this.showMassageService.showErrorMessage(error?.message);
-            }
-          );
-      },
-    });
+    this.teacherService
+      .deleteTeacher(this.selectedTeachers.map(teacher => teacher.id))
+      .subscribe();
   }
 
   // * --------------------- Filter AutoComplete Subject --------------------
@@ -655,7 +665,7 @@ export class TeacherComponent implements OnInit {
         );
       },
       error => {
-        this.showMassageService.showErrorMessage(error?.message);
+        // this.showMassageService.showErrorMessage(error?.message);
       }
     );
   }

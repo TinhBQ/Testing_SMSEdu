@@ -27,7 +27,9 @@ export class LoginComponent {
       '',
       Validators.compose([
         Validators.required,
-        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/),
+        Validators.pattern(
+          /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#$%&])[A-Za-z\d@#$%&]{8,}$/
+        ),
       ]),
     ],
     isForgotPassword: false,
@@ -55,14 +57,6 @@ export class LoginComponent {
 
   onSubmit() {
     this.blockedUI = true;
-    if (this.loginForm.invalid) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Thất bại',
-        detail: 'Đăng nhập không thành công',
-      });
-      return;
-    }
     this.authService
       .onLogin({ username: this.username.value, password: this.password.value })
       .subscribe(
@@ -73,7 +67,7 @@ export class LoginComponent {
           //   return;
           // }
 
-          // console.log(response);
+          console.log(response);
 
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);

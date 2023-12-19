@@ -81,7 +81,10 @@
               </div>
             </div>
             <div class="btn-login">
-              <p-button label="Đăng nhập" type="submit"></p-button>
+              <p-button
+                label="Đăng nhập"
+                [disabled]="loginForm.invalid"
+                type="submit"></p-button>
             </div>
           </div>
         </p-card>
